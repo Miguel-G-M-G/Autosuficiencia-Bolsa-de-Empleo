@@ -4,21 +4,16 @@
 <meta charset="UTF-8">
 <title>Bolsa de Trabajo</title>
 <style>
-body {
-    font-family: Arial;
-    background-color: #f4f4f4;
-    text-align: center;
-}
-h1 {
-    color: #333;
-}
+body { font-family: Arial; background:#f4f4f4; text-align:center; }
+h1 { color:#333; }
+input, button { padding:8px; margin:5px; }
 .card {
-    background-color: white;
-    margin: 15px auto;
-    padding: 15px;
-    width: 300px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    background:white;
+    margin:10px auto;
+    padding:15px;
+    width:300px;
+    border-radius:10px;
+    box-shadow:2px 2px 8px rgba(0,0,0,0.2);
 }
 </style>
 </head>
@@ -26,17 +21,55 @@ h1 {
 
 <h1>Ofertas de Empleo</h1>
 
-<div class="card">
-    <h3>Vendedor</h3>
-    <p>Empresa: Tienda XYZ</p>
-    <p>Sueldo: $8,000</p>
-</div>
+<h3>Agregar nuevo empleo</h3>
+<input type="text" id="titulo" placeholder="Título del empleo"><br>
+<input type="text" id="empresa" placeholder="Empresa"><br>
+<input type="text" id="sueldo" placeholder="Sueldo"><br>
+<button onclick="agregarEmpleo()">Agregar Empleo</button>
 
-<div class="card">
-    <h3>Programador</h3>
-    <p>Empresa: Tech SA</p>
-    <p>Sueldo: $15,000</p>
-</div>
+<h3>Lista de empleos</h3>
+<div id="listaEmpleos"></div>
+
+<script>
+// Función para agregar empleo
+function agregarEmpleo() {
+    const titulo = document.getElementById("titulo").value;
+    const empresa = document.getElementById("empresa").value;
+    const sueldo = document.getElementById("sueldo").value;
+
+    if(!titulo || !empresa || !sueldo){
+        alert("Por favor completa todos los campos");
+        return;
+    }
+
+    let empleos = JSON.parse(localStorage.getItem("empleos")) || [];
+    empleos.push({titulo, empresa, sueldo});
+    localStorage.setItem("empleos", JSON.stringify(empleos));
+
+    document.getElementById("titulo").value = "";
+    document.getElementById("empresa").value = "";
+    document.getElementById("sueldo").value = "";
+
+    mostrarEmpleos();
+}
+
+// Función para mostrar los empleos
+function mostrarEmpleos() {
+    const lista = document.getElementById("listaEmpleos");
+    lista.innerHTML = "";
+    const empleos = JSON.parse(localStorage.getItem("empleos")) || [];
+
+    empleos.forEach(e => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<h3>${e.titulo}</h3><p>Empresa: ${e.empresa}</p><p>Sueldo: ${e.sueldo}</p>`;
+        lista.appendChild(div);
+    });
+}
+
+// Mostrar empleos al cargar la página
+mostrarEmpleos();
+</script>
 
 </body>
 </html>
